@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RETO DEL COMPOST</title>
+
+<style>
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #e6f0d8;
+  color: #203629;
+}
+
+.contenedor {
+  max-width: 700px;
+  margin: 20px auto;
+  background: #fff9e9;
+  border: 3px solid #244d35;
+  border-radius: 20px;
+  overflow: hidden;
+  padding-bottom: 25px;
+}
+
+header {
+  background: #244d35;
+  color: white;
+  text-align: center;
+  padding: 25px 15px;
+}
+
+h1 {
+  margin: 8px 0;
+  font-size: 2em;
+}
+
+main {
+  padding: 25px;
+}
+
+.pantalla {
+  display: none;
+}
+
+.pantalla.activa {
+  display: block;
+}
+
+h2 {
+  color: #244d35;
+  line-height: 1.3;
+}
+
+p {
+  line-height: 1.6;
+}
+
+input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  margin: 10px 0;
+  border: 2px solid #bdcdb2;
+  border-radius: 10px;
+  font-size: 17px;
+}
+
+button, .enlace {
+  display: inline-block;
+  background: #244d35;
+  color: white;
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 12px;
+}
+
+button:hover, .enlace:hover {
+  background: #39734b;
+}
+
+.error {
+  color: #a43d2f;
+  font-weight: bold;
+}
+
+.lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.persona {
+  padding: 12px;
+  background: #edf2e3;
+  border-radius: 10px;
+  overflow-wrap: anywhere;
+}
+
+.persona small {
+  display: block;
+  margin-bottom: 5px;
+}
+
+footer {
+  text-align: center;
+  color: #71806a;
+  font-size: 13px;
+}
+
+@media (max-width: 480px) {
+  .lista {
+    grid-template-columns: 1fr;
+  }
+
+  button, .enlace {
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+<header>
+  <div style="font-size:38px">🌱</div>
+  <h1>RETO DEL COMPOST</h1>
+  <p>Cinco científicos. Un equipo. ¡Una misión sostenible!</p>
+</header>
+
+<main>
+
+  <!-- PANTALLA DE INICIO -->
+  <section class="pantalla activa" id="inicio">
+    <h2>¡Forma tu equipo de investigación!</h2>
+
+    <p>
+      Cada uno de los cinco participantes escribirá su nombre por turnos.
+      Al final, inventaréis un nombre científico para vuestro grupo.
+    </p>
+
+    <button type="button" onclick="empezar()">
+      Empezar el reto →
+    </button>
+  </section>
+
+  <!-- PANTALLA DE NOMBRES -->
+  <section class="pantalla" id="jugador">
+    <p id="turno"></p>
+
+    <h2 id="pregunta"></h2>
+
+    <label id="etiqueta" for="nombre">
+      Escribe tu nombre:
+    </label>
+
+    <input
+      id="nombre"
+      type="text"
+      maxlength="50"
+      placeholder="Escribe tu nombre..."
+      autocomplete="off"
+    >
+
+    <p class="error" id="errorNombre" role="alert"></p>
+
+    <button type="button" onclick="guardarNombre()">
+      Guardar y continuar →
+    </button>
+  </section>
+
+  <!-- NOMBRE DEL GRUPO -->
+  <section class="pantalla" id="grupo">
+    <h2>ESCRIBE UN NOMBRE CIENTÍFICO PARA TU GRUPO</h2>
+
+    <p>
+      Inventad un nombre original. ¡Cualquier nombre vale!
+    </p>
+
+    <div class="lista" id="listaNombres"></div>
+
+    <label for="nombreGrupo">
+      Nombre científico del grupo:
+    </label>
+
+    <input
+      id="nombreGrupo"
+      type="text"
+      maxlength="70"
+      placeholder="Ej.: Los Microbios Galácticos..."
+    >
+
+    <p class="error" id="errorGrupo" role="alert"></p>
+
+    <button type="button" onclick="finalizar()">
+      Finalizar el reto ✓
+    </button>
+  </section>
+
+  <!-- PANTALLA FINAL -->
+  <section class="pantalla" id="final">
+    <div style="font-size:48px">🌿🏆</div>
+
+    <h2>¡Reto del Compost completado!</h2>
+
+    <p>
+      ¡Enhorabuena, equipo científico!
+      Habéis completado vuestra misión.
+    </p>
+
+    <div class="lista" id="resumenFinal"></div>
+
+    <div class="persona">
+      <small><strong>NOMBRE CIENTÍFICO DEL GRUPO</strong></small>
+      <strong id="nombreFinal"></strong>
+    </div>
+
+    <!-- ENLACE AL SIGUIENTE GENIALLY -->
+    <a
+      class="enlace"
+      id="botonAvance"
+      href="https://view.genially.com/6ad420c229879a7c45a76c1b"
+      target="_blank"
+      rel="noopener"
+    >
+      Ir a la siguiente página →
+    </a>
+
+    <p>
+      <button type="button" onclick="reiniciar()">
+        Volver a jugar
+      </button>
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  Un pequeño equipo puede hacer grandes cosas por el planeta 🌍
+</footer>
+
+</div>
+
+<script>
+
+// AHORA PARTICIPAN CINCO CIENTÍFICOS
+var nombres = ["", "", "", "", ""];
+var jugadorActual = 0;
+
+/* Muestra una pantalla y oculta las demás. */
+function mostrar(id) {
+  document.querySelectorAll(".pantalla").forEach(function(p) {
+    p.classList.remove("activa");
+  });
+
+  document.getElementById(id).classList.add("activa");
+}
+
+/* Comienza el juego. */
+function empezar() {
+  nombres = ["", "", "", "", ""];
+  jugadorActual = 0;
+
+  document.getElementById("nombre").value = "";
+  document.getElementById("errorNombre").textContent = "";
+
+  prepararTurno();
+  mostrar("jugador");
+
+  document.getElementById("nombre").focus();
+}
+
+/* Prepara el turno del científico correspondiente. */
+function prepararTurno() {
+  var numero = jugadorActual + 1;
+
+  document.getElementById("turno").textContent =
+    "PRESENTACIÓN INDIVIDUAL · " + numero + " DE 5";
+
+  document.getElementById("pregunta").textContent =
+    "Escribe el nombre del CIENTÍFICO " + numero;
+
+  document.getElementById("etiqueta").textContent =
+    "Nombre del CIENTÍFICO " + numero + ":";
+}
+
+/* Guarda el nombre y avanza al siguiente científico. */
+function guardarNombre() {
+  var campo = document.getElementById("nombre");
+  var valor = campo.value.trim();
+
+  if (valor === "") {
+    document.getElementById("errorNombre").textContent =
+      "Escribe un nombre para continuar.";
+
+    campo.focus();
+    return;
+  }
+
+  nombres[jugadorActual] = valor;
+  jugadorActual++;
+
+  if (jugadorActual < 5) {
+    campo.value = "";
+
+    document.getElementById("errorNombre").textContent = "";
+
+    prepararTurno();
+    mostrar("jugador");
+
+    campo.focus();
+  } else {
+    dibujarLista("listaNombres");
+
+    document.getElementById("nombreGrupo").value = "";
+    document.getElementById("errorGrupo").textContent = "";
+
+    mostrar("grupo");
+
+    document.getElementById("nombreGrupo").focus();
+  }
+}
+
+/* Muestra los nombres introducidos. */
+function dibujarLista(id) {
+  var lista = document.getElementById(id);
+  lista.replaceChildren();
+
+  nombres.forEach(function(nombre, indice) {
+    var tarjeta = document.createElement("div");
+    tarjeta.className = "persona";
+
+    var etiqueta = document.createElement("small");
+    etiqueta.textContent = "CIENTÍFICO " + (indice + 1);
+
+    var texto = document.createElement("strong");
+    texto.textContent = nombre;
+
+    tarjeta.appendChild(etiqueta);
+    tarjeta.appendChild(texto);
+
+    lista.appendChild(tarjeta);
+  });
+}
+
+/* Finaliza el juego y muestra el botón de avance. */
+function finalizar() {
+  var campo = document.getElementById("nombreGrupo");
+  var grupo = campo.value.trim();
+
+  if (grupo === "") {
+    document.getElementById("errorGrupo").textContent =
+      "Inventad un nombre para vuestro grupo.";
+
+    campo.focus();
+    return;
+  }
+
+  document.getElementById("errorGrupo").textContent = "";
+
+  document.getElementById("nombreFinal").textContent = grupo;
+
+  dibujarLista("resumenFinal");
+
+  mostrar("final");
+}
+
+/* Permite volver a jugar desde el principio. */
+function reiniciar() {
+  nombres = ["", "", "", "", ""];
+  jugadorActual = 0;
+
+  document.getElementById("nombre").value = "";
+  document.getElementById("nombreGrupo").value = "";
+
+  document.getElementById("errorNombre").textContent = "";
+  document.getElementById("errorGrupo").textContent = "";
+
+  mostrar("inicio");
+}
+
+</script>
+
+</body>
+</html>
